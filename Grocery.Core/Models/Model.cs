@@ -6,6 +6,6 @@ namespace Grocery.Core.Models
     {
         public int Id { get; set; } = id;
         [ObservableProperty]
-        public string name = name;
+        string name = name;
     }
 }
