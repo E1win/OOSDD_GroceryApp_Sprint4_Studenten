@@ -20,11 +20,8 @@ namespace Grocery.Core.Services
             _productRepository = productRepository;
         }
 
-        public List<BestSellingProducts> GetBestSellingProducts(int topX = 5)
+        public List<BestSellingProducts> GetBestSellingProducts(uint topX = 5)
         {
-            // Can't return 0 or less products in list
-            ArgumentOutOfRangeException.ThrowIfNegativeOrZero(topX);
-
             List<Product> products = _productRepository.GetAll();
             Dictionary<int, int> salesPerProduct = new Dictionary<int, int>();
             List<BestSellingProducts> bestSellingProducts = new List<BestSellingProducts>();

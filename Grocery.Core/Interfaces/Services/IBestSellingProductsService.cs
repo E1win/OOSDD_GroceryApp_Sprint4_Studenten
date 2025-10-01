@@ -9,6 +9,6 @@ namespace Grocery.Core.Interfaces.Services
 {
     public interface IBestSellingProductsService
     {
-        public List<BestSellingProducts> GetBestSellingProducts(int topX = 5);
+        public List<BestSellingProducts> GetBestSellingProducts(uint topX = 5);
     }
 }
