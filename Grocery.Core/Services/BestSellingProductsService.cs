@@ -23,8 +23,8 @@ namespace Grocery.Core.Services
         public List<BestSellingProducts> GetBestSellingProducts(uint topX = 5)
         {
             List<Product> products = _productRepository.GetAll();
-            Dictionary<int, int> salesPerProduct = new Dictionary<int, int>();
-            List<BestSellingProducts> bestSellingProducts = new List<BestSellingProducts>();
+            Dictionary<int, int> salesPerProduct = [];
+            List<BestSellingProducts> bestSellingProducts = [];
 
             // Initialize sales for each products as 0
             foreach (Product product in products)
