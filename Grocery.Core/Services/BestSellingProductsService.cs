@@ -38,7 +38,7 @@ namespace Grocery.Core.Services
             products.Sort((p1, p2) => salesPerProduct[p2.Id].CompareTo(salesPerProduct[p1.Id]));
 
             // Add best selling products to list
-            for (int i = 0; i < Math.Min(topX, products.Count()); i++)
+            for (int i = 0; i < Math.Min(topX, products.Count); i++)
             {
                 bestSellingProducts.Add(
                     new BestSellingProducts(products[i].Id, products[i].Name, products[i].Stock, salesPerProduct[products[i].Id], i + 1)
