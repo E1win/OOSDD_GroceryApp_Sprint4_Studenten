@@ -22,27 +22,31 @@ namespace Grocery.Core.Services
 
         public List<BestSellingProducts> GetBestSellingProducts(uint topX = 5)
         {
-            List<Product> products = _productRepository.GetAll();
-            Dictionary<int, int> salesPerProduct = [];
+            Dictionary<int, int> productSales = [];
             List<BestSellingProducts> bestSellingProducts = [];
 
-            // Initialize sales for each products as 0
-            foreach (Product product in products)
-                salesPerProduct.Add(product.Id, 0);
-
-            // Get amount of sales for each product and add them to salesPerProduct dictionary
+            // Get amount of sales for each product and add them to productSales dictionary
             foreach (GroceryListItem item in _groceryListItemsRepository.GetAll())
-                salesPerProduct[item.ProductId] += item.Amount;
-
-            // Sort products based on amount of sales (in descending order, so index 0 will have highest sales)
-            products.Sort((p1, p2) => salesPerProduct[p2.Id].CompareTo(salesPerProduct[p1.Id]));
-
-            // Add best selling products to list
-            for (int i = 0; i < Math.Min(topX, products.Count); i++)
             {
-                bestSellingProducts.Add(
-                    new BestSellingProducts(products[i].Id, products[i].Name, products[i].Stock, salesPerProduct[products[i].Id], i + 1)
-                );
+                // Only add items with Amount greater than 0 to avoid getting products without sales on returned list 
+                if (item.Amount > 0)
+                    productSales[item.ProductId] = productSales.GetValueOrDefault(item.ProductId) + item.Amount;
+            }
+
+            // Create list of products ordered by sales, and limit the list size to topX
+            var topSoldProducts = productSales
+                .OrderByDescending(p => p.Value)
+                .Take((int)topX)
+                .ToList();
+
+            // Fill list with best selling products, using productSales key value pairs
+            int rank = 1;
+            foreach (var productSalesKVP in topSoldProducts)
+            {
+                Product? p = _productRepository.Get(productSalesKVP.Key);
+                if (p == null) continue; // Avoid edge case where product doesn't exist in repository but still exists in groceryListItems
+                int numberOfSales = productSalesKVP.Value;
+                bestSellingProducts.Add(new BestSellingProducts(p.Id, p.Name, p.Stock, numberOfSales, rank++));
             }
 
             return bestSellingProducts;
