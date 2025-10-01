@@ -3,9 +3,16 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:Grocery.App.ViewModels"
              xmlns:m="clr-namespace:Grocery.Core.Models;assembly=Grocery.Core"
+             xmlns:h="clr-namespace:Grocery.App.Helpers"
              x:Class="Grocery.App.Views.BestSellingProductsView"
              x:DataType="vm:BestSellingProductsViewModel"
              Title="BestSellingProductsView">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <h:HasItemsToBoolConverter x:Key="HasItemsToBoolConverter"/>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
     <Shell.TitleView>
         <Grid>
             <Label Text="Best verkochte producten" FontSize="Large" HorizontalOptions="Center" VerticalOptions="Center" />
@@ -18,7 +25,7 @@
                 <LinearItemsLayout Orientation="Vertical" ItemSpacing="10" />
             </CollectionView.ItemsLayout>
             <CollectionView.Header>
-                <Grid>
+                <Grid IsVisible="{Binding Products.Count, Converter={StaticResource HasItemsToBoolConverter}}">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="0.5*"/>
                         <ColumnDefinition Width="*"/>
@@ -49,6 +56,13 @@
                     </Grid>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
+            <CollectionView.EmptyView>
+                <ContentView>
+                    <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center">
+                        <Label Text="Er zijn nog geen producten verkocht" FontAttributes="Bold" HorizontalTextAlignment="Center"/>
+                    </VerticalStackLayout>
+                </ContentView>
+            </CollectionView.EmptyView>
         </CollectionView>
     </Border>
 </ContentPage>
